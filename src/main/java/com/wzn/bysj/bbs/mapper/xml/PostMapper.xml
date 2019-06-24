@@ -1,0 +1,205 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.wzn.bysj.bbs.mapper.PostMapper">
+
+
+    <!-- <sql id="_column">
+         id,user_name,user_password
+     </sql>-->
+
+    <select id="listPosts" resultType="Post">
+
+       select
+       pid,t_board.boardname as "board.boardname",t_board.boardid as "board.boardid",b.username as "user.username",b.id as "user.id",b.head as "user.head",
+       b.roleflag as "user.roleflag",title,views,replies,addtime,retime,top,good
+        from t_board,t_user b,t_post  where  userid=b.id and bid=boardid
+        and t_board.deleteflag=0 and bid=#{bid}  order by addtime desc;
+    </select>
+
+
+
+    <select id="listPostsAll" resultType="Post">
+
+       select
+       pid,t_board.boardname as "board.boardname",t_board.boardid as "board.boardid",b.username as "user.username",b.id as "user.id",b.head as "user.head",
+       b.roleflag as "user.roleflag",title,views,replies,addtime,retime,top,good
+        from t_board,t_user b,t_post  where  userid=b.id and bid=boardid
+        and t_board.deleteflag=0   order by addtime desc;
+    </select>
+
+
+
+    <select id="listPostsGood" resultType="Post">
+
+       select
+       pid,t_board.boardname as "board.boardname",t_board.boardid as "board.boardid",b.username as "user.username",b.id as "user.id",b.head as "user.head",
+       b.roleflag as "user.roleflag",title,views,replies,addtime,retime,top,good
+        from t_board,t_user b,t_post  where  userid=b.id and bid=boardid
+        and t_board.deleteflag=0 and bid=#{bid} and good=1 order by addtime desc;
+    </select>
+
+    <select id="listPostsNre" resultType="Post">
+
+       select
+       pid,t_board.boardname as "board.boardname",t_board.boardid as "board.boardid",b.username as "user.username",b.id as "user.id",b.head as "user.head",
+       b.roleflag as "user.roleflag",title,views,replies,addtime,retime,top,good
+        from t_board,t_user b,t_post  where  userid=b.id and bid=boardid
+        and t_board.deleteflag=0 and bid=#{bid}  order by retime desc;
+    </select>
+
+    <select id="listBreyi" resultType="Post">
+
+       select
+       pid,t_board.boardname as "board.boardname",t_board.boardid as "board.boardid",b.username as "user.username",b.id as "user.id",b.head as "user.head",
+       b.roleflag as "user.roleflag",title,views,replies,addtime,retime,top,good
+        from t_board,t_user b,t_post  where  userid=b.id and bid=boardid
+        and t_board.deleteflag=0 and bid=#{bid} and replies!=0 order by replies desc limit 10;
+    </select>
+
+
+    <select id="listDreyi" resultType="Post">
+
+     select
+       pid,t_board.boardname as "board.boardname",t_board.boardid as "board.boardid",b.username as "user.username",b.id as "user.id",b.head as "user.head",
+       b.roleflag as "user.roleflag",title,views,replies,addtime,retime,top,good
+        from t_board,t_user b,t_post  where  userid=b.id and bid=boardid and DATE_FORMAT( addtime,'%Y-%m-%d') = DATE_FORMAT(NOW(), '%Y-%m-%d')
+        and t_board.deleteflag=0  and replies!=0 order by replies desc limit 10;
+    </select>
+
+
+
+    <select id="postnum" resultType="int">
+
+    select count(*) from t_post where bid=#{bid}
+
+    </select>
+
+
+    <select id="listTop" resultType="Post">
+
+       select
+       pid,t_board.boardname as "board.boardname",t_board.boardid as "board.boardid",b.roleflag as "user.roleflag",
+       b.username as "user.username",b.id as "user.id",b.head as "user.head",title,views,replies,addtime,retime,top
+        from t_board,t_user b,t_post  where  userid=b.id and bid=boardid
+        and t_board.deleteflag=0 and  bid=#{bid} and top=1;
+    </select>
+
+
+    <select id="listNotice" resultType="Post">
+
+      select
+       pid,b.username as "user.username",b.id as "user.id",b.head as "user.head",title,views,replies,addtime,retime
+        from t_user b,t_post  where  userid=b.id   and bid=0;
+    </select>
+
+
+
+    <select id="getPostByTitle" resultType="Post">
+        select
+         pid,t_board.boardname as "board.boardname",t_board.boardid as "board.boardid",b.head as "user.head",
+         b.username as "user.username",b.id as "user.id",b.roleflag as "user.roleflag",title,views,replies,addtime,retime,top,good
+        from t_board,t_user b,t_post  where userid=b.id and bid=boardid  and t_board.deleteflag=0
+        and title like #{title} order by addtime desc;
+    </select>
+
+
+
+
+
+    <select id="getPostById" resultType="Post">
+        select
+        pid,t_board.boardname as "board.boardname",t_board.boardid as "board.boardid",
+        b.username as "user.username",b.id as "user.id",title,views,replies,addtime,retime,
+      top,good,files,scores
+        from t_board,t_user b,t_post  where userid=b.id and bid=boardid  and t_board.deleteflag=0
+        and pid = #{pid};
+    </select>
+
+
+
+
+    <select id="getPostByUId" resultType="Post">
+        select
+        pid,t_board.boardname as "board.boardname",t_board.boardid as "board.boardid",
+        b.username as "user.username",b.id as "user.id",title,views,replies,addtime,retime,
+     top,good,files,scores
+        from t_board,t_user b,t_post  where userid=b.id and bid=boardid  and t_board.deleteflag=0
+        and userid=#{uid} order by addtime desc;
+    </select>
+
+
+    <select id="getgoodPostByUId" resultType="Post">
+        select
+        pid,t_board.boardname as "board.boardname",t_board.boardid as "board.boardid",
+        b.username as "user.username",b.id as "user.id",title,views,replies,addtime,retime,
+      top,good,files,scores
+        from t_board,t_user b,t_post  where userid=b.id and bid=boardid  and good=1 and t_board.deleteflag=0
+        and userid=#{uid} order by addtime desc;
+    </select>
+
+
+
+    <select id="getNoticeById" resultType="Post">
+        select
+        pid, b.username as "user.username",b.id as "user.id",title,views,replies,addtime,retime,
+       top,good,files,scores
+        from t_user b,t_post  where userid=b.id  and bid=0
+        and pid = #{pid};
+    </select>
+
+
+
+    <insert id="savePost" useGeneratedKeys="true" keyProperty="pid" keyColumn = "pid" parameterType="Post">
+        insert into t_post(bid,userid,title,views,replies,addtime,retime,top,good,files,scores)
+        values (#{board.boardid},#{user.id},#{title},0,0,#{addtime},#{retime},0,0,#{files},#{scores});
+    </insert>
+
+
+    <update id="updatePost">
+        update t_post
+        <set>
+            <if test="post.board!= null">
+            <if test="post.board.boardid != null">
+                bid=#{post.board.boardid},</if></if>
+            <if test="post.title != null and post.title !='' ">title=#{post.title},</if>
+            <if test="post.top != null">top=#{post.top},</if>
+            <if test="post.good!= null">good=#{post.good},</if>
+            <if test="post.scores != null">scores=#{post.scores}</if>
+        </set>
+        where pid = #{post.pid};
+    </update>
+
+    <update id="addViews">
+        update t_post
+        set views=views+1
+        where pid = #{id};
+    </update>
+
+    <update id="addReplies">
+        update t_post
+        set replies=replies+1,retime=#{retime}
+        where pid = #{id};
+    </update>
+
+    <update id="subReplies">
+        update t_post
+        set replies=replies-1
+        where pid = #{id};
+    </update>
+
+
+    <delete id="deletePost">
+        delete from t_post
+        where pid = #{id};
+    </delete>
+
+
+
+
+
+
+
+</mapper>
+

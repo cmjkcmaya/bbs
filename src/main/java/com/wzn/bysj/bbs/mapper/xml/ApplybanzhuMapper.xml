@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.wzn.bysj.bbs.mapper.ApplybanzhuMapper">
+
+
+    <!-- <sql id="_column">
+         id,user_name,user_password
+     </sql>-->
+
+
+    <select id="listApplybanzhu" resultType="Applybanzhu">
+
+      select aid,id as "user.id", username as "user.username",boardid as "board.boardid",boardname as "board.boardname", reason,atime
+        from t_applybanzhu , t_user,t_board where t_applybanzhu.uid=id and t_applybanzhu.bid=boardid and boardadmin is null order by atime desc
+    </select>
+
+
+
+    <insert id="saveApplybanzhu">
+        insert into t_applybanzhu (uid,bid,reason,atime)
+        values (#{user.id},#{board.boardid},#{reason},#{atime});
+    </insert>
+
+
+
+
+    <delete id="deleteApplybanzhu">
+        delete from t_applybanzhu
+        where aid=#{aid};
+    </delete>
+
+    <delete id="deleteApplybanzhuAll">
+        delete from t_applybanzhu
+        where bid=#{bid};
+    </delete>
+
+</mapper>
+

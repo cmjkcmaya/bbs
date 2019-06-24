@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.wzn.bysj.bbs.mapper.AdviseMapper">
+
+
+    <!-- <sql id="_column">
+         id,user_name,user_password
+     </sql>-->
+
+
+    <select id="listAdvise" resultType="Advise">
+
+      select aid,a.id as "poster.id",a.username as "poster.username",recid as "recer.id",b.username as "recer.username" ,content,ptime
+      from t_advise left outer join t_user a on postid=a.id left outer join t_user b on recid=b.id
+       where ( recid=#{id} or recid=0) and (postid!=#{id} or postid is null) order by ptime desc
+
+    </select>
+
+
+    <select id="advisenum" resultType="int">
+
+      select count(*) from t_advise
+       where  recid=#{id} and (postid!=#{id} or postid is null)
+
+    </select>
+
+
+    <select id="banzhuAdvise" resultType="Advise">
+
+      select aid,a.id as "poster.id",a.username as "poster.username",recid as "recer.id",b.username as "recer.username" ,content,ptime
+      from t_advise left outer join t_user a on postid=a.id left outer join t_user b on recid=b.id
+       where (recid=#{id} or recid=0 or recid=-1 )and  (postid!=#{id} or postid is null) order by ptime desc
+
+    </select>
+
+    <select id="listqunfa" resultType="Advise">
+
+      select aid,a.id as "poster.id",a.username as "poster.username",recid as "recer.id",b.username as "recer.username" ,content,ptime
+      from t_advise left outer join t_user a on postid=a.id left outer join t_user b on recid=b.id
+       where  recid=0 or recid=-1 order by ptime desc
+
+    </select>
+
+
+
+    <select id="getAdviseById" resultType="Advise">
+        select aid,a.id as "poster.id",a.username as "poster.username",recid as "recer.id",b.username as "recer.username" ,content,ptime
+      from t_advise left outer join t_user a on postid=a.id left outer join t_user b on recid=b.id
+       where  aid=#{aid}
+    </select>
+
+
+
+    <insert id="saveAdvise">
+        insert into t_advise(postid,recid,content,ptime)
+        values (#{poster.id},#{recer.id},#{content},#{ptime});
+    </insert>
+
+
+
+
+    <delete id="deleteAdvise">
+        delete from t_advise
+        where aid=#{aid};
+    </delete>
+
+
+    <delete id="deleteAdviseAll">
+        delete from t_advise
+        where recid=#{id};
+    </delete>
+
+    <delete id="deleteAdvisequnfa">
+        delete from t_advise
+        where recid=0 or recid=-1;
+    </delete>
+
+
+
+</mapper>
+

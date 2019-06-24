@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.wzn.bysj.bbs.mapper.ReportuserMapper">
+
+
+    <!-- <sql id="_column">
+         id,user_name,user_password
+     </sql>-->
+
+
+    <select id="listReportuser" resultType="Reportuser">
+
+      select reid,a.id as "reuser.id",a.username as "reuser.username",b.id as "user.id",b.username as "user.username",b.forbid as "user.forbid",b.block as "user.block",reason,rtime,handle
+        from t_reportuser , t_user a ,t_user b where reuid=a.id and  uid=b.id
+          and handle=0 and b.forbid=0 and b.block=0 and b.roleflag!=7  order by rtime desc
+    </select>
+
+    <select id="listReportuserAll" resultType="Reportuser">
+
+      select reid,a.id as "reuser.id",a.username as "reuser.username",b.id as "user.id",b.username as "user.username",b.forbid as "user.forbid",b.block as "user.block",reason,rtime,handle
+        from t_reportuser , t_user a ,t_user b where reuid=a.id and  b.roleflag!=7 and uid=b.id  order by rtime desc
+
+    </select>
+
+
+
+    <insert id="saveReportuser">
+        insert into t_reportuser (reuid,uid,reason,rtime,handle)
+        values (#{reuser.id},#{user.id},#{reason},#{rtime},0);
+    </insert>
+
+
+
+
+    <update id="updateReportuser">
+        update t_reportuser
+        set handle=#{handle}
+        where reid=#{reid};
+    </update>
+
+
+    <update id="updateReportuserAll">
+        update t_reportuser
+        set handle=#{handle}
+        where uid=#{id} and handle=0;
+    </update>
+
+
+
+
+    <delete id="deleteReportuser">
+        delete from t_reportuser
+        where reid=#{reid};
+    </delete>
+
+    <delete id="deleteReportuserAll">
+        delete from t_reportuser;
+    </delete>
+
+</mapper>
+

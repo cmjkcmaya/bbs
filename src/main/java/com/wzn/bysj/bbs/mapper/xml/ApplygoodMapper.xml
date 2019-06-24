@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.wzn.bysj.bbs.mapper.ApplygoodMapper">
+
+
+    <!-- <sql id="_column">
+         id,user_name,user_password
+     </sql>-->
+
+
+    <select id="listApplygoodAll" resultType="Applygood">
+
+      select aid,t_applygood.pid as "post.pid",title as "post.title",bid as "post.board.boardid", reason,atime
+        from t_applygood , t_post where t_applygood.pid=t_post.pid  and t_post.good=0  order by atime desc
+    </select>
+
+    <select id="listApplygood" resultType="Applygood">
+
+       select aid,t_applygood.pid as "post.pid",title as "post.title",bid as "post.board.boardid", reason,atime
+        from t_applygood , t_post where t_applygood.pid=t_post.pid and bid=#{bid} and t_post.good=0 order by atime desc
+    </select>
+
+
+
+    <insert id="saveApplygood">
+        insert into t_applygood (pid,reason,atime)
+        values (#{post.pid},#{reason},#{atime});
+    </insert>
+
+
+
+
+    <delete id="deleteApplygood">
+        delete from t_applygood
+        where aid=#{aid};
+    </delete>
+
+    <delete id="deleteApplygoodAll">
+        delete from t_applygood
+        where pid=#{pid};
+    </delete>
+
+</mapper>
+

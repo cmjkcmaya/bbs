@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.wzn.bysj.bbs.mapper.PermissionMapper">
+
+
+    <!-- <sql id="_column">
+         id,user_name,user_password
+     </sql>-->
+
+
+    <select id="listPermissionsByUserName" resultType="Permission">
+
+     select DISTINCT pename,detail from (SELECT FLOOR(IF((exp/100+1>=6),5,exp/100+1)) as lv,username,roleflag from t_user)as t,t_permission,t_lv_permission as lp
+ where (t.lv>=lp.lv or roleflag>=lp.lv) and lp.peid=t_permission.peid and username=#{name}
+    </select>
+
+
+
+</mapper>
+

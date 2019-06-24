@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.wzn.bysj.bbs.mapper.ForbidMapper">
+
+
+    <!-- <sql id="_column">
+         id,user_name,user_password
+     </sql>-->
+
+
+    <select id="listForbidAll" resultType="Forbid">
+
+      select fid,a.id as "handler.id",a.username as "handler.username",b.id as "user.id",b.username as "user.username",b.forbid as "user.forbid",b.block as "user.block",ftime,handle
+        from t_forbid , t_user a ,t_user b where hid=a.id and  uid=b.id and (b.forbid=1 or b.block=1) order by fid desc
+    </select>
+
+    <select id="listjiejin" resultType="Forbid">
+
+      select fid,uid as "user.id",handle
+        from t_forbid where DATE_FORMAT( ftime,'%Y-%m-%d') = DATE_FORMAT(NOW(), '%Y-%m-%d')
+    </select>
+
+
+    <select id="listForbidf" resultType="Forbid">
+
+      select fid,a.id as "handler.id",a.username as "handler.username",b.id as "user.id",b.username as "user.username",b.forbid as "user.forbid",b.block as "user.block",ftime,handle
+        from t_forbid , t_user a ,t_user b where hid=a.id and  uid=b.id and handle=1  and b.forbid=1   order by fid desc
+    </select>
+
+    <select id="listForbidb" resultType="Forbid">
+
+      select fid,a.id as "handler.id",a.username as "handler.username",b.id as "user.id",b.username as "user.username",b.forbid as "user.forbid",b.block as "user.block",ftime,handle
+        from t_forbid , t_user a ,t_user b where hid=a.id and  uid=b.id and handle=2  and b.block=1 order by fid desc
+    </select>
+
+    <select id="getFtime" resultType="Date">
+
+      select ftime
+        from t_forbid where uid=#{id} and handle=2
+    </select>
+
+
+    <select id="getForbid" resultType="Forbid">
+
+      select fid,b.id as "user.id",b.username as "user.username",b.forbid as "user.forbid",b.block as "user.block",ftime,handle
+        from t_forbid,t_user b where uid=b.id and handle=1  and b.forbid=1 and hid=#{hid} order by fid desc
+    </select>
+
+
+
+    <insert id="saveForbid">
+        insert into t_forbid (uid,hid,ftime,handle)
+        values (#{user.id},#{handler.id},#{ftime},#{handle});
+    </insert>
+
+
+
+    <delete id="deleteForbid">
+        delete from t_forbid
+        where fid=#{fid};
+    </delete>
+    <delete id="deleteForbidf">
+        delete from t_forbid
+        where uid=#{id} and handle=1;
+    </delete>
+    <delete id="deleteForbidb">
+        delete from t_forbid
+        where uid=#{id} and handle=2;
+    </delete>
+
+
+
+
+</mapper>
+

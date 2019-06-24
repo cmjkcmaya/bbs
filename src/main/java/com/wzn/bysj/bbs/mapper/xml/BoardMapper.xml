@@ -1,0 +1,127 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.wzn.bysj.bbs.mapper.BoardMapper">
+
+
+    <!-- <sql id="_column">
+         id,user_name,user_password
+     </sql>-->
+
+    <select id="listBoards" resultType="Board">
+        select
+        boardid,boardname,deleteflag,postnum,id as "boardadmin.id", username as "boardadmin.username"
+        from t_board left outer join t_user  on id=boardadmin where deleteflag=0;
+    </select>
+
+    <select id="listBoardsNoAdmin" resultType="Board">
+        select
+        boardid,boardname,deleteflag,postnum
+        from t_board where deleteflag=0 and boardadmin is null ;
+    </select>
+
+
+
+    <select id="getBoardByName" resultType="Board">
+        select
+         boardid,boardname,deleteflag,postnum,id as "boardadmin.id", username as "boardadmin.username"
+        from t_board left outer join t_user
+       on   id=boardadmin where boardname  like  #{boardname} and deleteflag=0 ;
+    </select>
+
+
+    <select id="getBoardByUid" resultType="Integer">
+        select
+        boardid
+        from t_board
+        where boardadmin=#{id} and deleteflag=0;
+    </select>
+
+
+    <select id="getAdmin" resultType="User">
+        select
+        t_user.*
+        from t_user,t_board
+        where id = boardadmin and boardid=#{id} and deleteflag=0;
+    </select>
+
+
+    <select id="getBoardById" resultType="Board">
+        select
+         boardid,boardname,deleteflag,postnum,id as "boardadmin.id", username as "boardadmin.username"
+        from t_board left outer join t_user on
+         id=boardadmin  where boardid = #{id} and deleteflag=0;
+    </select>
+
+    <insert id="saveBoard">
+        insert into t_board(boardname,deleteflag,postnum)
+        values (#{boardname},0,0);
+    </insert>
+
+
+    <update id="updateBoard">
+        update t_board
+        <set>
+            <if test="board.boardname != null and board.boardname !='' ">boardname=#{board.boardname},</if>
+            <if test="board.boardadmin!= null">
+            <if test="board.boardadmin.id != null">
+                boardadmin=#{board.boardadmin.id}</if></if>
+            <if test="board.boardadmin== null">
+                boardadmin=null
+            </if>
+
+        </set>
+        where boardid = #{board.boardid};
+    </update>
+
+
+    <update id="hb">
+        update t_post
+        set bid=#{idm}
+        where bid = #{id};
+    </update>
+
+
+    <update id="updateNum">
+        update t_board
+        set postnum=postnum+1
+        where boardid = #{id};
+    </update>
+
+    <update id="updatepn">
+        update t_board
+        set postnum=#{num}
+        where boardid = #{id};
+    </update>
+
+
+
+    <update id="subNum">
+        update t_board
+        set postnum=postnum-1
+        where boardid = #{id};
+    </update>
+   <!-- <delete id="deleteBoard" >
+        DELETE FROM t_board WHERE STUDENT_ID = #{studentID}
+</delete>-->
+
+    <update id="deleteBoard">
+        update t_board
+        set deleteflag=1
+        where boardid = #{id};
+    </update>
+
+    <delete id="realdeleteBoard">
+        delete from t_board
+        where boardid = #{id};
+    </delete>
+
+
+
+
+
+
+
+</mapper>
+

@@ -1,0 +1,117 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.wzn.bysj.bbs.mapper.ReplyMapper">
+
+
+    <!-- <sql id="_column">
+         id,user_name,user_password
+     </sql>-->
+
+    <select id="postmain" resultType="Reply">
+
+       select
+       rid,t_post.pid as "post.pid",t_post.title as "post.title",t_board.boardid as "post.board.boardid",
+        t_board.boardname as "post.board.boardname", t_user.id as "user.id",t_user.username as "user.username",
+        t_user.head as "user.head", t_user.roleflag as "user.roleflag",content,replytime,images,floor
+        from t_board,t_user,t_post,t_reply  where  t_reply.userid=t_user.id and t_post.bid=boardid and t_post.pid=t_reply.pid
+        and t_board.deleteflag=0  and t_reply.pid=#{pid}  and  floor=1 ;
+    </select>
+
+
+    <select id="listRe" resultType="Reply">
+
+      select
+       rid,t_post.pid as "post.pid",t_post.title as "post.title",t_board.boardid as "post.board.boardid",
+        t_board.boardname as "post.board.boardname", t_user.id as "user.id",t_user.username as "user.username",
+        t_user.head as "user.head",t_user.roleflag as "user.roleflag",content,replytime,images,floor
+        from t_board,t_user,t_post,t_reply  where  t_reply.userid=t_user.id and t_post.bid=boardid and t_post.pid=t_reply.pid
+        and t_board.deleteflag=0  and t_reply.pid=#{pid}  and floor!=1 order  by floor asc;
+    </select>
+
+    <select id="notice" resultType="Reply">
+
+       select
+       rid,t_post.pid as "post.pid",t_post.title as "post.title", t_user.id as "user.id",t_user.username as "user.username",
+        t_user.head as "user.head", t_user.roleflag as "user.roleflag",content,replytime,images,floor
+        from t_user,t_post,t_reply  where  t_reply.userid=t_user.id  and t_post.pid=t_reply.pid  and t_reply.pid=#{pid}  and  floor=1 ;
+    </select>
+
+
+    <select id="listnore" resultType="Reply">
+
+      select
+       rid,t_post.pid as "post.pid",t_post.title as "post.title",t_user.id as "user.id",t_user.username as "user.username",
+        t_user.head as "user.head",t_user.roleflag as "user.roleflag",content,replytime,images,floor
+        from t_user,t_post,t_reply  where  t_reply.userid=t_user.id  and t_post.pid=t_reply.pid
+          and t_reply.pid=#{pid}  and floor!=1 order  by floor asc;
+    </select>
+
+    <!--<select id="postnum" resultType="int">
+
+    select count(*) from t_post where bid=#{bid} and deleteflag=0
+
+    </select>-->
+
+    <select id="getFloor" resultType="int">
+        select max(floor) from t_reply where pid=#{pid}
+    </select>
+
+
+    <select id="getReplyById" resultType="Reply">
+       select
+       rid,t_post.pid as "post.pid",t_post.title as "post.title",t_board.boardid as "post.board.boardid",
+        t_board.boardname as "post.board.boardname", t_user.id as "user.id",t_user.username as "user.username",
+        t_user.head as "user.head",t_user.roleflag as "user.roleflag",content,replytime,images,floor
+        from t_board,t_user,t_post,t_reply  where  t_reply.userid=t_user.id and t_post.bid=boardid and t_post.pid=t_reply.pid
+        and t_board.deleteflag=0  and rid=#{rid} ;
+    </select>
+
+
+    <select id="replynum" resultType="int">
+
+    select count(*) from t_reply where pid=#{pid} and floor!=1
+
+    </select>
+
+
+
+
+    <insert id="saveReply">
+        insert into t_reply(pid,userid,content,replytime,images,floor)
+        values (#{reply.post.pid},#{reply.user.id},#{reply.content},#{reply.replytime},#{reply.images},#{reply.floor});
+    </insert>
+
+
+
+
+
+    <update id="updateReply">
+        update t_reply
+        <set>
+            <if test="reply.content!= null and reply.content !='' ">content=#{reply.content}</if>
+        </set>
+        where rid = #{reply.rid};
+    </update>
+
+
+
+
+
+    <delete id="deleteReply">
+        delete from t_reply
+        where rid = #{rid};
+    </delete>
+
+    <delete id="deletePostReply">
+        delete from t_reply
+        where pid=#{id};
+    </delete>
+
+
+
+
+
+</mapper>
+
